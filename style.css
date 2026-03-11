@@ -1,8 +1,400 @@
-body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; display: flex; justify-content: center; padding: 20px; }
-.container { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 100%; max-width: 600px; }
-.input-group { margin-bottom: 20px; }
-label { display: block; margin-bottom: 8px; font-weight: bold; }
-textarea { width: 100%; height: 150px; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-button { width: 100%; padding: 12px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; }
-button:hover { background: #0056b3; }
-#result { background: #f8f9fa; padding: 15px; border-radius: 4px; white-space: pre-wrap; border: 1px solid #ddd; margin-top: 10px; }
+:root {
+    --primary: #6366f1;
+    --primary-hover: #4f46e5;
+    --bg-gradient-1: #e0e7ff;
+    --bg-gradient-2: #fae8ff;
+    --card-bg: rgba(255, 255, 255, 0.85);
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --border: #cbd5e1;
+    --radius: 16px;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, var(--bg-gradient-1) 0%, var(--bg-gradient-2) 100%);
+    color: var(--text-main);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem 1rem;
+}
+
+.container {
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    padding: 40px;
+    border-radius: var(--radius);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0,0,0,0.05);
+    width: 100%;
+    max-width: 650px;
+    border: 1px solid rgba(255,255,255,0.6);
+}
+
+header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.logo-icon {
+    font-size: 2.5rem;
+    color: var(--primary);
+    margin-bottom: 10px;
+}
+
+header h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 5px;
+}
+
+header p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+}
+
+.input-group {
+    margin-bottom: 24px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+/* Custom File Upload Styling */
+.file-upload-wrapper {
+    position: relative;
+    width: 100%;
+    height: 120px;
+}
+
+.file-input {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 2;
+}
+
+.file-upload-design {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    border: 2px dashed var(--border);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: rgba(255,255,255,0.5);
+    transition: all 0.3s ease;
+    color: var(--text-muted);
+}
+
+.file-upload-wrapper:hover .file-upload-design {
+    border-color: var(--primary);
+    background: rgba(99, 102, 241, 0.05);
+    color: var(--primary);
+}
+
+.file-upload-design i {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.file-upload-design.has-file {
+    border-style: solid;
+    border-color: #10b981;
+    color: #10b981;
+    background: rgba(16, 185, 129, 0.05);
+}
+
+textarea {
+    width: 100%;
+    height: 140px;
+    padding: 16px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    resize: none;
+    font-size: 0.95rem;
+    background: rgba(255,255,255,0.8);
+    transition: border-color 0.3s;
+}
+
+textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}
+
+button {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, var(--primary) 0%, #818cf8 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(99, 102, 241, 0.4);
+}
+
+button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Loader Animation */
+.loader {
+    display: none;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255,255,255,0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin { 100% { transform: rotate(360deg); } }
+
+/* Results Section */
+.hidden { display: none !important; }
+
+#result-container {
+    margin-top: 30px;
+    background: #ffffff;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    animation: slideUp 0.4s ease-out;
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.result-header {
+    background: #f8fafc;
+    padding: 15px 20px;
+    border-bottom: 1px solid var(--border);
+}
+
+.result-header h3 {
+    font-size: 1.1rem;
+    color: var(--text-main);
+}
+
+.result-content {
+    padding: 20px;
+    white-space: pre-wrap;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #334155;
+    max-height: 400px;
+    overflow-y: auto;
+}
+/* --- Modal (Popup) Styles --- */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(6px);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.modal.show {
+    display: flex;
+    opacity: 1;
+}
+
+.modal-content {
+    background: #ffffff;
+    width: 90%;
+    max-width: 800px;
+    max-height: 85vh;
+    border-radius: 20px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    display: flex;
+    flex-direction: column;
+    transform: translateY(20px);
+    transition: transform 0.3s ease;
+    overflow: hidden;
+}
+
+.modal.show .modal-content {
+    transform: translateY(0);
+}
+
+.modal-header {
+    padding: 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f8fafc;
+}
+
+.modal-header h2 {
+    font-size: 1.5rem;
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.modal-header h2 i {
+    color: var(--primary);
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 8px;
+    width: auto;
+    box-shadow: none;
+    transition: color 0.2s;
+}
+
+.close-btn:hover {
+    color: #ef4444;
+    transform: none;
+    box-shadow: none;
+}
+
+.modal-body {
+    padding: 32px;
+    overflow-y: auto;
+    background: #ffffff;
+}
+
+/* --- Markdown Formatting inside the Modal --- */
+.markdown-format h3 {
+    color: var(--primary);
+    font-size: 1.3rem;
+    margin-top: 24px;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--bg-gradient-1);
+}
+
+.markdown-format h3:first-child {
+    margin-top: 0;
+}
+
+.markdown-format p {
+    line-height: 1.7;
+    margin-bottom: 16px;
+    color: #334155;
+    font-size: 1.05rem;
+}
+
+.markdown-format ul, .markdown-format ol {
+    margin-bottom: 20px;
+    padding-left: 24px;
+}
+
+.markdown-format li {
+    margin-bottom: 10px;
+    line-height: 1.6;
+    color: #334155;
+}
+
+.markdown-format strong {
+    color: var(--text-main);
+    font-weight: 700;
+}
+
+.markdown-format hr {
+    border: none;
+    border-top: 1px dashed var(--border);
+    margin: 24px 0;
+}
+/* --- Circular Progress Bar Styles --- */
+.score-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px 20px 10px;
+    background: #ffffff;
+    border-bottom: 1px dashed var(--border);
+}
+
+.circular-progress {
+    position: relative;
+    width: 140px;
+    height: 140px;
+}
+
+.circular-progress svg {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg); /* Starts the circle at the top (12 o'clock) */
+}
+
+.bg-circle {
+    fill: none;
+    stroke: #f1f5f9;
+    stroke-width: 8;
+}
+
+.progress-circle {
+    fill: none;
+    stroke: var(--primary);
+    stroke-width: 8;
+    stroke-linecap: round;
+    stroke-dasharray: 251.2; /* Circumference of the circle (2 * pi * r) */
+    stroke-dashoffset: 251.2; /* Hides the circle initially */
+    transition: stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1), stroke 0.5s ease;
+}
+
+.score-value {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.score-label {
+    margin-top: 15px;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.9rem;
+}
